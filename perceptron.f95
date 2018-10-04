@@ -2,7 +2,6 @@ PROGRAM perceprton
 
   !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
   !Criação da subrotina do cálculo de distância por Mahalanobis                !
-  !Orientador: Cosme Ferreira da Ponte Neto                                    !
   !Aluno: Victor Ribeiro Carreira                                              !
   !Este programa visa simular um perceptron de Hosenblat                       !
   !Para usar compilação com flags utilize:                                     !
