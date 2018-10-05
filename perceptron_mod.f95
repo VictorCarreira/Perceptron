@@ -4,9 +4,8 @@ IMPLICIT NONE
   INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
   INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(12,100)
   INTEGER(KIND=SP):: n
-  REAL(KIND=DP)::inicio,final, TM, c
-  REAL(KIND=DP), ALLOCATABLE, DIMENSION(:):: x, y
-  REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: A, bt, xt
+  REAL(KIND=DP)::inicio,final, TM, c, x, y
+  REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: A, bt
 
   
 CONTAINS
@@ -28,7 +27,7 @@ END FUNCTION Signal
   IMPLICIT NONE
   INTEGER(KIND=SP), INTENT(IN):: n  !n, dimensão da matriz
   INTEGER(KIND=SP):: i, j
-  REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE, INTENT(OUT):: A !A é a matriz de entrada. Ela vai ser reescrita no processo
+  REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE, INTENT(INOUT):: A !A é a matriz de entrada. Ela vai ser reescrita no processo
 
   ALLOCATE(A(n,n))
 
@@ -44,7 +43,7 @@ SUBROUTINE transpostaV(n,At)
 IMPLICIT NONE
 INTEGER(KIND=SP), INTENT(IN):: n  !n, dimensão da matriz
 INTEGER(KIND=SP):: i
-REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE, INTENT(OUT):: At !A é a matriz de entrada. Ela vai ser reescrita no processo
+REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE, INTENT(INOUT):: At !A é a matriz de entrada. Ela vai ser reescrita no processo
 REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE:: A
 
 ALLOCATE(A(1,n),At(n,1))
