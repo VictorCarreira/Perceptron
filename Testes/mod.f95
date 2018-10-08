@@ -39,17 +39,17 @@ END FUNCTION Signal
 
 END SUBROUTINE transpostaM
 
-SUBROUTINE transpostaV(n,At)
+SUBROUTINE transpostaV(n,A)
 IMPLICIT NONE
 INTEGER(KIND=SP), INTENT(IN):: n  !n, dimensão da matriz
 INTEGER(KIND=SP):: i
-REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE, INTENT(INOUT):: At !A é a matriz de entrada. Ela vai ser reescrita no processo
-REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE:: A
+REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE, INTENT(INOUT):: A !A é a matriz de entrada. Ela vai ser reescrita no processo
+!REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE:: A
 
-ALLOCATE(A(1,n),At(n,1))
+!ALLOCATE(A(1,n))!,At(n,1))
 
   DO i=1,n
-      At(:,i) = A(i,:)
+      A(:,i) = A(i,:)
   ENDDO
 
 END SUBROUTINE transpostaV
