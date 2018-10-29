@@ -1,35 +1,33 @@
-MODULE mod
+MODULE sub_perceptron
 IMPLICIT NONE
   PUBLIC
   INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
   INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(12,100)
   INTEGER(KIND=SP):: n
-  REAL(KIND=DP)::inicio,final, TM, c, x, y
+  REAL(KIND=DP)::inicio,final, TM, c, x
   REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: A, bt
 
   
 CONTAINS
 
-REAL FUNCTION Signal(x,y)
+REAL FUNCTION bin(x)
  
 REAL(KIND=DP), INTENT(IN):: x
-REAL(KIND=DP), INTENT(OUT):: y 
 
   IF(x >= 0.0 ) THEN
-   y = -1   
+   bin = -1   
   ELSE IF (x < 0.0) THEN
-   y = +1 
+   bin = +1 
   END IF
 
-END FUNCTION Signal
+END FUNCTION bin
 
  SUBROUTINE transpostaM(n,A)
   IMPLICIT NONE
   INTEGER(KIND=SP), INTENT(IN):: n  !n, dimensão da matriz
   INTEGER(KIND=SP):: i, j
-  REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE, INTENT(INOUT):: A !A é a matriz de entrada. Ela vai ser reescrita no processo
+  REAL(KIND=DP), DIMENSION(n,n), INTENT(INOUT):: A !A é a matriz de entrada. Ela vai ser reescrita no processo
 
-  ALLOCATE(A(n,n))
 
     DO i=1,n
       DO j=1,n
@@ -54,4 +52,4 @@ REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE, INTENT(INOUT):: A !A é a matriz de 
 
 END SUBROUTINE transpostaV
 
-END MODULE mod
+END MODULE sub_perceptron
