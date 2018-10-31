@@ -15,9 +15,9 @@ REAL FUNCTION bin(x)
 REAL(KIND=DP), INTENT(IN):: x
 
   IF(x >= 0.0 ) THEN
-   bin = -1   
+   bin = +1.0   
   ELSE IF (x < 0.0) THEN
-   bin = +1 
+   bin = -1.0 
   END IF
 
 END FUNCTION bin
