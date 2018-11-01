@@ -1,4 +1,4 @@
-PROGRAM perceprton
+PROGRAM perceptron
 
   !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++!
   !Criação de um Perceptron simples para análise de uma litologia              !
@@ -25,8 +25,9 @@ IMPLICIT NONE
   INTEGER, PARAMETER::SSP = SELECTED_INT_KIND(r=8)
   INTEGER, PARAMETER::DDP = SELECTED_REAL_KIND(12,100)
   INTEGER(KIND=SSP):: i
-  !REAL(KIND=DDP)::b, eta , c, n, Delta
+  REAL(KIND=DDP):: etaR, etaD 
   REAL(KIND=DDP):: aa, bb, vi, vf, dltv
+  REAL(KIND=DDP),PARAMETER::cc=1.0,nnn=2.0, eetaO=1.0, taau=3.0
   REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xx, w, wt   
 
   ALLOCATE(wt(3,3),w(3,3),xx(3,3))
@@ -41,28 +42,28 @@ IMPLICIT NONE
   !Matriz de pesos
   w(1,1)=1.0
   w(1,2)=2.0
-  w(1,3)=3.0
+  w(1,3)=4.0
 
-  w(2,1)=3.0
-  w(2,2)=2.0
-  w(2,3)=5.0
+  w(2,1)=5.0
+  w(2,2)=1.0
+  w(2,3)=4.0
 
-  w(3,1)=2.0
-  w(3,2)=3.0
-  w(3,3)=9.0
+  w(3,1)=6.0
+  w(3,2)=4.0
+  w(3,3)=8.0
 
   !sinal de entrada
-  xx(1,1)=4.0
-  xx(1,2)=5.0
-  xx(1,3)=6.0
+  xx(1,1)=-46.0
+  xx(1,2)=56.0
+  xx(1,3)=63.0
 
-  xx(2,1)=7.0
-  xx(2,2)=6.0
-  xx(2,3)=4.0
+  xx(2,1)=-65.0
+  xx(2,2)=2.0
+  xx(2,3)=43.0
 
-  xx(3,1)=5.0
-  xx(3,2)=8.0
-  xx(3,3)=7.0
+  xx(3,1)=50.0
+  xx(3,2)=-83.0
+  xx(3,3)=78.0
 
   WRITE(*,*)'Matriz w'
   WRITE(*,FMT=11)w
@@ -87,9 +88,19 @@ IMPLICIT NONE
   WRITE(*,FMT=12)bb
 
 
-  ! Taxa de aprendizado por aproximação estocástica (Robin,1958)
+  ! Taxa de aprendizado por aproximação estocástica (Robbins,1958)
+  
+  etaR = Robbins(cc,nnn)
 
-  !eta = c/n
+  WRITE(*,*)'Taxa de aprendizado de Robbins'
+  WRITE(*,FMT=12)etaR
+
+ ! Taxa de aprendizado por procura e convergência de Darken(1992)
+  
+  etaD = Darken(eetaO,nnn,taau)
+
+  WRITE(*,*)'Taxa de aprendizado de Darken'
+  WRITE(*,FMT=12)etaD
 
 !Atualização dos pesos sinápticos
 
@@ -120,4 +131,4 @@ IMPLICIT NONE
 11 FORMAT(ES12.2,2x,ES12.2,2x,ES12.2)
 12 FORMAT(F12.2)
 
-END PROGRAM perceprton
+END PROGRAM perceptron
