@@ -53,17 +53,17 @@ IMPLICIT NONE
   w(3,3)=8.0
 
   !sinal de entrada
-  xx(1,1)=-46.0
-  xx(1,2)=56.0
-  xx(1,3)=63.0
+  xx(1,1)=1.0
+  xx(1,2)=3.0
+  xx(1,3)=5.0
 
-  xx(2,1)=-65.0
-  xx(2,2)=2.0
-  xx(2,3)=43.0
+  xx(2,1)=2.0
+  xx(2,2)=6.0
+  xx(2,3)=10.0
 
-  xx(3,1)=50.0
+  xx(3,1)=-13.0
   xx(3,2)=-83.0
-  xx(3,3)=78.0
+  xx(3,3)=23.0
 
   WRITE(*,*)'Matriz w'
   WRITE(*,FMT=11)w
@@ -102,11 +102,11 @@ IMPLICIT NONE
   WRITE(*,*)'Taxa de aprendizado de Darken'
   WRITE(*,FMT=12)etaD
 
-!Atualização dos pesos sinápticos
+!Fase de Treinamento (Atualização dos pesos)
 
-!  DO i=1,m
-!  w(i+1)=w(i)+ eta * Delta * x(i)
-!  ENDDO
+  !DO i=1,nn
+  !  w(i+1)=w(i)+ etaR * Delta * x(i)
+  !END DO
 
 ! Taxa de aprendizado
 
