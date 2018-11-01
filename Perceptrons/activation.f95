@@ -1,0 +1,24 @@
+MODULE activation
+IMPLICIT NONE
+  PUBLIC
+  INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
+  INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(12,100)
+  REAL(KIND=DP):: x
+
+  
+CONTAINS
+
+REAL FUNCTION bin(x)
+ 
+REAL(KIND=DP), INTENT(IN):: x
+
+  IF(x >= 0.0 ) THEN
+   bin = +1.0   
+  ELSE IF (x < 0.0) THEN
+   bin = -1.0 
+  END IF
+
+END FUNCTION bin
+
+
+END MODULE activation
