@@ -9,22 +9,24 @@ IMPLICIT NONE
   
 CONTAINS
 
-REAL FUNCTION Robbins(c,nn)
+REAL(KIND=DP) FUNCTION Robbins(c,nn)
 !Taxa de aprendizagem calculada por Robbins and Monro(1951).
 !c é uma constante e nn é o número de iterações.
  IMPLICIT NONE
+ INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(12,100) 
  REAL(KIND=DP), INTENT(IN):: c,nn
 
  Robbins=c/nn
 
 END FUNCTION Robbins
 
-REAL FUNCTION Darken(etaO,nn,tau)
+REAL(KIND=DP) FUNCTION Darken(etaO,nn,tau)
 !Taxa de aprendizagem calculada por Darken and Moody(1992)
 !Evita que o eta dispare para valores altos de c e n.
 !Onde eta0 e tau são constantes definidas pelo usuário.
 !c = tau.etaO
  IMPLICIT NONE
+ INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(12,100) 
  REAL(KIND=DP), INTENT(IN):: etaO,nn,tau
 
  Darken=etaO/(1+(nn/tau))
