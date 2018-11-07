@@ -22,13 +22,13 @@ USE algebra
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 IMPLICIT NONE 
-  INTEGER, PARAMETER::SSP = SELECTED_INT_KIND(r=4)
-  INTEGER, PARAMETER::DDP = SELECTED_REAL_KIND(8,10)
-  INTEGER(KIND=SSP):: i
-  REAL(KIND=DDP):: etaR, etaD 
-  REAL(KIND=DDP):: aa, bb, vi, vf, dltv
-  REAL(KIND=DDP),PARAMETER::cc=1.0,nnn=2.0, eetaO=1.0, taau=3.0
-  REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xx, w, wt   
+  INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
+  INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
+  INTEGER(KIND=SP):: i
+  REAL(KIND=DP):: eta
+  REAL(KIND=DP):: aa, bb, vi, vf, dltv
+  REAL(KIND=DP),PARAMETER::cc=1.0,nnn=2.0, eetaO=1.0, taau=3.0
+  REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: xx, w, wt   
 
   ALLOCATE(wt(3,3),w(3,3),xx(3,3))
 
@@ -100,17 +100,17 @@ IMPLICIT NONE
 
   ! Taxa de aprendizado por aproximação estocástica (Robbins,1958)
   
-  etaR = Robbins(cc,nnn)
+  eta = Robbins(cc,nnn)
 
   WRITE(*,*)'Taxa de aprendizado de Robbins'
-  WRITE(*,FMT=12)etaR
+  WRITE(*,FMT=12)eta
 
  ! Taxa de aprendizado por procura e convergência de Darken(1992)
   
-  etaD = Darken(eetaO,nnn,taau)
+  eta = Darken(eetaO,nnn,taau)
 
   WRITE(*,*)'Taxa de aprendizado de Darken'
-  WRITE(*,FMT=12)etaD
+  WRITE(*,FMT=12)eta
 
 !Fase de Treinamento (Atualização dos pesos)
 
