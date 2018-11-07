@@ -1,8 +1,8 @@
 MODULE algebra
 IMPLICIT NONE
   PUBLIC
-  INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
-  INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(12,100)
+  INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
+  INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
   INTEGER(KIND=SP):: n
   REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: A, bt
   REAL(KIND=DP):: c,nn, tau, etaO
@@ -13,7 +13,7 @@ REAL(KIND=DP) FUNCTION Robbins(c,nn)
 !Taxa de aprendizagem calculada por Robbins and Monro(1951).
 !c é uma constante e nn é o número de iterações.
  IMPLICIT NONE
- INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(12,100) 
+ INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10) 
  REAL(KIND=DP), INTENT(IN):: c,nn
 
  Robbins=c/nn
@@ -26,7 +26,7 @@ REAL(KIND=DP) FUNCTION Darken(etaO,nn,tau)
 !Onde eta0 e tau são constantes definidas pelo usuário.
 !c = tau.etaO
  IMPLICIT NONE
- INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(12,100) 
+ INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10) 
  REAL(KIND=DP), INTENT(IN):: etaO,nn,tau
 
  Darken=etaO/(1+(nn/tau))
