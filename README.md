@@ -1,6 +1,6 @@
 Autor/Author: Victor Ribeiro Carreira <victorcarreira@on.br> or <carreiravr@gmail.com>
 
-Perceptron: Esta é uma tentativa de criar um neurônio primitivo do tipo perceptron.
+Perceptron: Cria um neurônio primitivo do tipo perceptron.
 Copyright (C) 2017 por Victor Ribeiro Carreira <victorcarreira@on.br>
 
 =============
