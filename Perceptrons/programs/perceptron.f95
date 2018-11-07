@@ -22,8 +22,8 @@ USE algebra
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 IMPLICIT NONE 
-  INTEGER, PARAMETER::SSP = SELECTED_INT_KIND(r=8)
-  INTEGER, PARAMETER::DDP = SELECTED_REAL_KIND(12,100)
+  INTEGER, PARAMETER::SSP = SELECTED_INT_KIND(r=4)
+  INTEGER, PARAMETER::DDP = SELECTED_REAL_KIND(8,10)
   INTEGER(KIND=SSP):: i
   REAL(KIND=DDP):: etaR, etaD 
   REAL(KIND=DDP):: aa, bb, vi, vf, dltv
@@ -32,7 +32,7 @@ IMPLICIT NONE
 
   ALLOCATE(wt(3,3),w(3,3),xx(3,3))
 
-  OPEN(1,FILE='cuzao.txt')
+  OPEN(1,FILE='outputs/saida.txt')
   
   !teste de validação. 
 
@@ -61,19 +61,27 @@ IMPLICIT NONE
 
   xx(2,1)=2.0
   xx(2,2)=6.0
-  xx(2,3)=10.0
+  xx(2,3)=1.0
 
   xx(3,1)=-13.0
-  xx(3,2)=-83.0
-  xx(3,3)=23.0
+  xx(3,2)=-3.0
+  xx(3,3)=3.0
 
   WRITE(*,*)'Matriz w'
   WRITE(*,FMT=11)w
+
+  WRITE(1,*)'Matriz w'
+  WRITE(1,FMT=11)w
+
 
   wt = transpose(w)
   
   WRITE(*,*)'Matriz wt'
   WRITE(*,FMT=11)wt
+
+  WRITE(1,*)'Matriz wt'
+  WRITE(1,FMT=11)wt
+
 
   DO i=1,3
     aa = aa + dot_product(wt(:,i),xx(i,:))
@@ -117,8 +125,6 @@ IMPLICIT NONE
 !  DO i=1,m
 !    v(i)=w(i)+b
 !  ENDDO
-
-  WRITE(1,FMT=11)w, wt
 
   CALL cpu_time(vf)
 
