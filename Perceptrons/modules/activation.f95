@@ -3,7 +3,7 @@ IMPLICIT NONE
   PUBLIC
   INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
   INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
-  REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: xx, w
+  REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: xxi, w
   REAL(KIND=DP):: x, aa, n, eta
 
   
@@ -21,12 +21,12 @@ REAL(KIND=DP), INTENT(IN):: x
 
 END FUNCTION bin
 
-SUBROUTINE treinamento(xx,aa,eta,epoch,w)
+SUBROUTINE treinamento(xxi,aa,eta,epoch,w)
 !Rotina de treinamento para somente um padrão
 IMPLICIT NONE
 INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
 INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
-REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN):: xx
+REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN):: xxi
 REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(INOUT):: w
 REAL(KIND=DP), INTENT(IN):: aa, eta
 INTEGER(KIND=SP), INTENT(IN):: epoch
@@ -34,9 +34,9 @@ INTEGER(KIND=SP):: i
 
 DO i=1,epoch
   IF(aa>0) THEN 
-    w(i+1,i+1,i+1)=w(i,i,i)
+    w(i+1,i+1)=w(i,i)
   ELSE IF(aa<=0) THEN
-    w(i+1,i+1,i+1)=W(i,i,i)+eta*xx(i,i,i) 
+    w(i+1,i+1)=w(i,i)+eta*xxi(i+1,i+1) 
   END IF 
 END DO 
 
