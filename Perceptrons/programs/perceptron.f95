@@ -22,15 +22,15 @@ USE algebra
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 IMPLICIT NONE 
-  INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
-  INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
-  INTEGER(KIND=SP):: i
-  REAL(KIND=DP):: eta
-  REAL(KIND=DP):: aa, bb, vi, vf, dltv
-  REAL(KIND=DP),PARAMETER::cc=1.0,nnn=2.0, eetaO=1.0, taau=3.0
-  REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: xx, w, wt   
+  INTEGER, PARAMETER::SSP = SELECTED_INT_KIND(r=4)
+  INTEGER, PARAMETER::DDP = SELECTED_REAL_KIND(8,10)
+  INTEGER(KIND=SSP):: i, epoca
+  REAL(KIND=DDP):: etaR, etaD
+  REAL(KIND=DDP):: theta, Fativ , vi, vf, dltv
+  REAL(KIND=DDP),PARAMETER::cc=1.0,nnn=2.0, eetaO=1.0, taau=3.0
+  REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi, omega, omegaT
 
-  ALLOCATE(wt(3,3),w(3,3),xx(3,3))
+  ALLOCATE(omegaT(3,3),omega(3,3),xi(3,3))
 
   OPEN(1,FILE='outputs/saida.txt')
   
@@ -38,93 +38,91 @@ IMPLICIT NONE
 
   CALL cpu_time(vi) 
   
-  w=0.0
-  xx=0.0
+  omega=0.0
+  xi=0.0
 
   !Matriz de pesos
-  w(1,1)=1.0
-  w(1,2)=2.0
-  w(1,3)=4.0
+  omega(1,1)=1.0
+  omega(1,2)=2.0
+  omega(1,3)=4.0
 
-  w(2,1)=5.0
-  w(2,2)=1.0
-  w(2,3)=4.0
+  omega(2,1)=5.0
+  omega(2,2)=1.0
+  omega(2,3)=4.0
 
-  w(3,1)=6.0
-  w(3,2)=4.0
-  w(3,3)=8.0
+  omega(3,1)=6.0
+  omega(3,2)=4.0
+  omega(3,3)=8.0
 
   !sinal de entrada
-  xx(1,1)=1.0
-  xx(1,2)=3.0
-  xx(1,3)=5.0
+  xi(1,1)=1.0
+  xi(1,2)=3.0
+  xi(1,3)=5.0
 
-  xx(2,1)=2.0
-  xx(2,2)=6.0
-  xx(2,3)=1.0
+  xi(2,1)=2.0
+  xi(2,2)=6.0
+  xi(2,3)=1.0
 
-  xx(3,1)=-13.0
-  xx(3,2)=-3.0
-  xx(3,3)=3.0
+  xi(3,1)=-13.0
+  xi(3,2)=-3.0
+  xi(3,3)=3.0
+
+  !Número de épocas
+  epoca = 2
 
   WRITE(*,*)'Matriz w'
-  WRITE(*,FMT=11)w
+  WRITE(*,FMT=11)omega
 
   WRITE(1,*)'Matriz w'
-  WRITE(1,FMT=11)w
+  WRITE(1,FMT=11)omega
 
 
-  wt = transpose(w)
+  omegaT = transpose(omega)
   
   WRITE(*,*)'Matriz wt'
-  WRITE(*,FMT=11)wt
+  WRITE(*,FMT=11)omegaT
 
   WRITE(1,*)'Matriz wt'
-  WRITE(1,FMT=11)wt
+  WRITE(1,FMT=11)omegaT
 
 
   DO i=1,3
-    aa = aa + dot_product(wt(:,i),xx(i,:))
+    theta = theta + dot_product(omegaT(:,i),xi(i,:))
   END DO
 
   !aa=-aa
   
   WRITE(*,*)'Domínio da função sinal'
-  WRITE(*,FMT=11)aa
+  WRITE(*,FMT=11)theta
 
-  bb = bin(aa) !Função sinal binária
+  Fativ = bin(theta) !Função sinal binária
   
   WRITE(*,*)'Imagem da função sinal'
-  WRITE(*,FMT=12)bb
+  WRITE(*,FMT=12)Fativ
 
 
   ! Taxa de aprendizado por aproximação estocástica (Robbins,1958)
   
-  eta = Robbins(cc,nnn)
+  etaR = Robbins(cc,nnn)
 
   WRITE(*,*)'Taxa de aprendizado de Robbins'
-  WRITE(*,FMT=12)eta
+  WRITE(*,FMT=12)etaR
 
  ! Taxa de aprendizado por procura e convergência de Darken(1992)
   
-  eta = Darken(eetaO,nnn,taau)
+  etaD = Darken(eetaO,nnn,taau)
 
   WRITE(*,*)'Taxa de aprendizado de Darken'
-  WRITE(*,FMT=12)eta
+  WRITE(*,FMT=12)etaD
 
 !Fase de Treinamento (Atualização dos pesos)
 
-  !DO i=1,nn
-  !  w(i+1)=w(i)+ etaR * Delta * x(i)
-  !END DO
+CALL treinamento(xi,theta,etaD,epoca,omega)
 
-! Taxa de aprendizado
+WRITE(*,*)'Matriz w atualizada'
+WRITE(*,FMT=11)omega
 
-
-! Saída da rede com BIAS (viés) associado
-!  DO i=1,m
-!    v(i)=w(i)+b
-!  ENDDO
+!Fase de Classificação ()
 
   CALL cpu_time(vf)
 
