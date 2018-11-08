@@ -1,13 +1,15 @@
-Autor/Author: Victor Ribeiro Carreira <victorcarreira@on.br> or <carreiravr@gmail.com>
+Autor/Author: Victor Carreira <carreiravr@gmail.com> e Igor Morgado <morgado.igor@gmail.com>
 
 Perceptron: Cria um neurônio primitivo do tipo perceptron.
-Copyright (C) 2018 por Victor Ribeiro Carreira <victorcarreira@on.br>
+Copyright (C) 2018 por Victor Carreira <victorcarreira@on.br>
 
-=============
+*************
 APRESENTAÇÃO
-=============
+*************
 
-O programa visa a criação de um perceptron.
+O repositório tem por objetivo:
+I - Criação de um perceptron em fortran e em python
+II - Análise do custo computacional nas duas linguagens 
 
 **********************************************************************************
 * Neurônio primitivo de Rosenblatt (1962);                                       *
