@@ -32,12 +32,21 @@ REAL(KIND=DP), INTENT(IN):: aa, eta
 INTEGER(KIND=SP), INTENT(IN):: epoch
 INTEGER(KIND=SP):: i
 
+!Critério de parada (BRUTAL EM 100 PELO +oo)
+!IF(aa>100)THEN
+!  epoch=0
+! DO WHILE (aa>100)
+!   epoch=epoch+1
+! END DO
+!END IF
+
 DO i=1,epoch
+ !Atualização do w para somente um padrão 
   IF(aa>0) THEN 
     w(i+1,i+1)=w(i,i)
   ELSE IF(aa<=0) THEN
     w(i+1,i+1)=w(i,i)+eta*xxi(i+1,i+1) 
-  END IF 
+  END IF
 END DO 
 
 
