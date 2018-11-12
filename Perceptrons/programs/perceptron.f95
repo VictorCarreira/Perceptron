@@ -30,7 +30,7 @@ IMPLICIT NONE
   REAL(KIND=DDP),PARAMETER::cc=1.0,nnn=2.0, eetaO=1.0, taau=3.0
   REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi, omega, omegaT, csi
 
-  ALLOCATE(omegaT(8,8),omega(8,8),xi(8,8),csi(8,8))
+  ALLOCATE(omegaT(8,4),omega(4,8),xi(4,8),csi(4,8))
 
   OPEN(1,FILE='outputs/saida.txt')
   
@@ -43,41 +43,44 @@ IMPLICIT NONE
 
   !Matriz de pesos
   omega(1,1)=1.0d00
-  omega(1,2)=2.0d00
-  omega(1,3)=4.0d00
+  omega(2,1)=2.0d00
+  omega(3,1)=1.8d00
+  omega(4,1)=0.5d00
+
+  omega(1,2)=7.0d00
+  omega(2,2)=2.5d00
+  omega(3,2)=1.0d00
+  omega(4,2)=0.8d00
+
+  omega(1,3)=0.2d00
+  omega(2,3)=0.6d00
+  omega(3,3)=3.0d00
+  omega(4,3)=1.0d00
+  
   omega(1,4)=1.2d00
+  omega(2,4)=5.9d00
+  omega(3,4)=0.1d00
+  omega(4,4)=2.0d00
+
   omega(1,5)=1.0d00
-  omega(1,6)=2.0d00
-  omega(1,7)=3.0d00
-  omega(1,8)=1.0d00
+  omega(2,5)=0.2d00
+  omega(3,5)=0.8d00
+  omega(4,5)=0.2d00
 
-  omega(2,1)=5.0d00
-  omega(2,2)=1.0d00
-  omega(2,3)=4.0d00
-  omega(2,4)=1.0d00
-  omega(2,5)=1.0d00
-  omega(2,6)=1.0d00
-  omega(2,7)=1.0d00
-  omega(2,8)=1.0d00
+  omega(1,6)=5.0d00
+  omega(2,6)=2.0d00
+  omega(3,6)=1.0d00
+  omega(4,6)=0.2d00
 
-  omega(3,1)=6.0d00
-  omega(3,2)=4.0d00
-  omega(3,3)=8.0d00
-  omega(3,4)=1.0d00
-  omega(3,5)=1.0d00
-  omega(3,6)=2.0d00
-  omega(3,7)=1.0d00
-  omega(3,8)=3.0d00
+  omega(1,7)=1.0d00
+  omega(2,7)=1.1d00
+  omega(3,7)=7.0d00
+  omega(4,7)=4.0d00
 
-  omega(4,1)=1.0d00
-  omega(4,2)=2.0d00
-  omega(4,3)=3.0d00
-  omega(4,4)=1.0d00
-  omega(4,5)=1.0d00  
-  omega(4,6)=1.0d00
-  omega(4,7)=2.0d00
-  omega(4,8)=1.0d00
-
+  omega(1,8)=8.0d00
+  omega(2,8)=1.2d00
+  omega(3,8)=5.0d00
+  omega(4,8)=2.0d00
 
 
   !sinal de entrada
@@ -127,16 +130,16 @@ IMPLICIT NONE
   xi(4,8)=6.10d00
 
   !Número de épocas
-  epoca = 7 !Precisa ser menor do que a dimensão da matriz omega
+  epoca = 3 !Precisa ser menor do que a dimensão da matriz omega
 
   WRITE(*,*)'Matriz w'
-  WRITE(*,FMT=11)omega
+  WRITE(*,FMT=13)omega
 
   WRITE(1,*)'Matriz w'
-  WRITE(1,FMT=11)omega
+  WRITE(1,FMT=13)omega
 
   WRITE(*,*)'Sinal de treinamento (União de todas as classes)'
-  WRITE(*,FMT=11)xi
+  WRITE(*,FMT=13)xi
 
   omegaT = transpose(omega)
   
@@ -154,12 +157,12 @@ IMPLICIT NONE
   !aa=-aa
   
   WRITE(*,*)'Domínio da função sinal'
-  WRITE(*,FMT=11)theta
+  WRITE(*,FMT=*)theta
 
-  Fativ = bin(theta) !Função sinal binária
+  Fativ = bin(theta) !Função sinal degrau
   
   WRITE(*,*)'Imagem da função sinal'
-  WRITE(*,FMT=12)Fativ
+  WRITE(*,FMT=*)Fativ
 
 
   ! Taxa de aprendizado por aproximação estocástica (Robbins,1958)
@@ -181,7 +184,7 @@ IMPLICIT NONE
 CALL treinamento(xi,theta,etaD,epoca,omega)
 
   WRITE(*,*)'Matriz w atualizada'
-  WRITE(*,FMT=11)omega
+  WRITE(*,FMT=13)omega
 
 !Fase de Classificação (Usa a matriz w atualizada)
 
@@ -191,54 +194,54 @@ csi=0.0d00
 
 !Classe folhelho
 csi(1,1)=2.52d00
-csi(1,2)=9.83d01
-csi(1,3)=1.07d04
-csi(1,4)=3.06d00
+csi(2,1)=9.83d01
+csi(3,1)=1.07d04
+csi(4,1)=3.06d00
 
-csi(2,1)=2.63d00
+csi(1,2)=2.63d00
 csi(2,2)=9.85d01
-csi(2,3)=1.07d04
-csi(2,4)=3.39d00
+csi(3,2)=1.07d04
+csi(4,2)=3.39d00
 
-csi(3,1)=2.57d00
-csi(3,2)=9.28d01
+csi(1,3)=2.57d00
+csi(2,3)=9.28d01
 csi(3,3)=9.62d03
-csi(3,4)=2.91d00
+csi(4,3)=2.91d00
 
-csi(4,1)=2.56d00
-csi(4,2)=9.63d01
-csi(4,3)=9.64d03
+csi(1,4)=2.56d00
+csi(2,4)=9.63d01
+csi(3,4)=9.64d03
 csi(4,4)=2.78d00
 
 !Classe Diabásio
 
-csi(5,1)=3.00d00
-csi(5,2)=3.01d01
-csi(5,3)=1.52d08
-csi(5,4)=5.19d00
+csi(1,5)=3.00d00
+csi(2,5)=3.01d01
+csi(3,5)=1.52d08
+csi(4,5)=5.19d00
 
-csi(6,1)=2.94d00
-csi(6,2)=2.81d01
-csi(6,3)=1.44d08
-csi(6,4)=5.65d00
+csi(1,6)=2.94d00
+csi(2,6)=2.81d01
+csi(3,6)=1.44d08
+csi(4,6)=5.65d00
 
-csi(7,1)=2.93d00
-csi(7,2)=3.19d01
-csi(7,3)=1.27d08
-csi(7,4)=5.51d00
+csi(1,7)=2.93d00
+csi(2,7)=3.19d01
+csi(3,7)=1.27d08
+csi(4,7)=5.51d00
 
-csi(8,1)=2.94d00
-csi(8,2)=3.18d01
-csi(8,3)=1.56d08
-csi(8,4)=5.58d00
+csi(1,8)=2.94d00
+csi(2,8)=3.18d01
+csi(3,8)=1.56d08
+csi(4,8)=5.58d00
 
 WRITE(*,*)'Sinal de classificação (união de todas as classes)'
-WRITE(*,FMT=11)csi
+WRITE(*,FMT=13)csi
 
  omegaT=transpose(omega)
 
  DO i=1,8
-   theta = theta + dot_product(omegaT(:,i),csi(1,:))
+   theta = theta + dot_product(omegaT(i,:),csi(:,i))
  END DO
 
 !Classificação Binária
@@ -258,6 +261,8 @@ Fativ=bin(theta)
 
 11 FORMAT(8(ES12.2,1x))
 12 FORMAT(F12.2)
+13 FORMAT(4(ES12.2,1x))
+14 FORMAT(D12.12)
 
 END PROGRAM perceptron
 
