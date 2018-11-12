@@ -248,7 +248,10 @@ WRITE(*,FMT=13)csi
 
 Fativ=bin(theta)
 
-  CALL cpu_time(vf)
+WRITE(*,*)'Classificação da rede'
+WRITE(*,FMT=*)Fativ  
+
+CALL cpu_time(vf)
 
   dltv = vf - vi
 
@@ -262,7 +265,7 @@ Fativ=bin(theta)
 11 FORMAT(8(ES12.2,1x))
 12 FORMAT(F12.2)
 13 FORMAT(4(ES12.2,1x))
-14 FORMAT(D12.12)
+!14 FORMAT(D12.12)
 
 END PROGRAM perceptron
 
