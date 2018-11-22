@@ -3,6 +3,7 @@ IMPLICIT NONE
   PUBLIC
   INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
   INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
+  REAL(KIND=DP), ALLOCATABLE, DIMENSION(:)::pp
   REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: xxi, w
   REAL(KIND=DP):: x, aa, n, eta
 
@@ -51,6 +52,32 @@ END DO
 
 
 END SUBROUTINE treinamento
+
+
+
+SUBROUTINE treinamentoP(xxi,aa,eta,epoch,pp)
+!Rotina de treinamento para somente um padrão
+IMPLICIT NONE
+INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
+INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
+REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN):: xxi
+REAL(KIND=DP), ALLOCATABLE, DIMENSION(:), INTENT(INOUT):: pp
+REAL(KIND=DP), INTENT(IN):: aa, eta
+INTEGER(KIND=SP), INTENT(IN):: epoch
+INTEGER(KIND=SP):: i
+
+
+DO i=1,epoch
+ !Atualização do w para somente um padrão 
+  IF(aa>0) THEN 
+    pp(i+1)=pp(i)
+  ELSE IF(aa<=0) THEN
+    pp(i+1)=pp(i)+eta*xxi(i+1,i+1) 
+  END IF
+END DO 
+
+
+END SUBROUTINE treinamentoP
 
 
 END MODULE activation
