@@ -55,29 +55,31 @@ END SUBROUTINE treinamento
 
 
 
-SUBROUTINE treinamentoP(xxi,aa,eta,epoch,pp)
-!Rotina de treinamento para somente um padrão
+SUBROUTINE synaptic(xxi1,xxi2,a1,a2,eta,epoch,w)
 IMPLICIT NONE
 INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
 INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
-REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN):: xxi
-REAL(KIND=DP), ALLOCATABLE, DIMENSION(:), INTENT(INOUT):: pp
-REAL(KIND=DP), INTENT(IN):: aa, eta
-INTEGER(KIND=SP), INTENT(IN):: epoch
-INTEGER(KIND=SP):: i
+REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN):: xxi1,xxi2
+REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(INOUT):: w
+REAL(KIND=DP), INTENT(IN):: a1, a2, eta
+INTEGER(KIND=DP), INTENT(IN):: epoch
+INTEGER(KIND=SP):: i,j,k
+
+DO k=1,epoch !épocas
+ DO j=1,8 !número de linhas da matriz de entrada
+  DO i=1,4 ! número de propriedades da matriz de entrada 
+    IF(a1 <= 0d0 .and. a2 < 0d0) THEN 
+      w(i,1)=w(i,1)
+    ELSE IF(a1 >= 0d0 .and. a2 > 0d0) THEN
+      w(i,1)=w(i,1)+eta*xxi1(j,i)
+      w(i,1)=w(i,1)-eta*xxi2(j,i) 
+    END IF
+  END DO 
+ END DO
+END DO  
 
 
-DO i=1,epoch
- !Atualização do w para somente um padrão 
-  IF(aa>0) THEN 
-    pp(i+1)=pp(i)
-  ELSE IF(aa<=0) THEN
-    pp(i+1)=pp(i)+eta*xxi(i+1,i+1) 
-  END IF
-END DO 
-
-
-END SUBROUTINE treinamentoP
+END SUBROUTINE synaptic
 
 
 END MODULE activation
