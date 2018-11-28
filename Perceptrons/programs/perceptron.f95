@@ -25,14 +25,14 @@ IMPLICIT NONE
   INTEGER, PARAMETER::SSP = SELECTED_INT_KIND(r=4)
   INTEGER, PARAMETER::DDP = SELECTED_REAL_KIND(8,10)
   INTEGER(KIND=SSP):: i, j
-  INTEGER(KIND=DDP)::epoca
+  INTEGER(KIND=SSP)::epoca
   REAL(KIND=DDP):: etaR, etaD
-  REAL(KIND=DDP):: theta1, theta2, Fativ , vi, vf, dltv
+  REAL(KIND=DDP):: theta1, theta2, C1, C2, vi, vf, dltv
   REAL(KIND=DDP),PARAMETER::cc=1.0,nnn=2.0, eetaO=1.0, taau=3.0
   !REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:):: omega
   REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi1, xi2, csi, omega, omegaT
 
-  ALLOCATE(xi1(8,4),xi2(8,4),csi(8,4),omega(8,1), omegaT(1,8))
+  ALLOCATE(xi1(8,4),xi2(8,4),csi(8,4),omega(8,1),omegaT(1,8))
 
   OPEN(1,FILE='outputs/saida.txt')
    
@@ -45,6 +45,8 @@ IMPLICIT NONE
   xi1=0.0d00   !Treinamento de um único tipo litológico (subclasse1)
   xi2=0.0d00   !Treinamento de multi-padrões litológicos (subclasse2)
   epoca=0  !Número de ciclos de treinamento
+  theta1=0.0d0
+  theta1=0.0d0
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ENTRADA DA REDE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -53,11 +55,12 @@ IMPLICIT NONE
 
 
  !Vetor pesos:
-  DO j=1,1
+   
    DO i=1,8
+    DO j=1,1
     omega(i,j)=1.0d00
    END DO 
-  END DO
+  END DO 
 
 !Sinal de entrada para treinamento classe 1 (Folhelho)
   
@@ -148,7 +151,7 @@ IMPLICIT NONE
  
 
 !Número de épocas
-  epoca = 9000
+  epoca = 250
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TREINAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -163,17 +166,18 @@ IMPLICIT NONE
    
   WRITE(*,*)'Vetor de pesos:'
   WRITE(*,FMT=14)omega
+  
+  omegaT=transpose(omega)
+  
+  WRITE(*,*)'Vetor de pesos tranposto:'
+  WRITE(*,FMT=11)omegaT
 
-  omegaT = transpose(omega)
-
-
-  DO i=1,8
-   DO j=1,4
-     theta1 = theta1 + omegaT(1,j)*xi1(i,j)
-     theta2 = theta2 + omegaT(1,j)*xi2(i,j) 
+  DO j=1,4
+   DO i=1,8
+     theta1 = theta1 + omegaT(1,i)*xi1(i,j)
+     theta2 = theta2 + omegaT(1,i)*xi2(i,j) 
    END DO 
   END DO 
-
   
   WRITE(*,*)'Domínio da função sinal subclasse 1'
   WRITE(*,FMT=11)theta1
@@ -181,12 +185,14 @@ IMPLICIT NONE
   WRITE(*,*)'Domínio da função sinal subclasse 2'
   WRITE(*,FMT=11)theta2
 
-  Fativ = bin(theta1) !Função sinal degrau
-
+  C1 = bin(theta1) !Define subclasse 1
+  C2 = bin(theta2) !Define subclasse 2 
   
-  WRITE(*,*)'Imagem da função sinal'
-  WRITE(*,FMT=*)Fativ
+  WRITE(*,*)'Subclasse 1'
+  WRITE(*,FMT=*)C1
 
+  WRITE(*,*)'Subclasse 2'
+  WRITE(*,FMT=*)C2
 
   ! Taxa de aprendizado por aproximação estocástica (Robbins,1958)
   
@@ -208,7 +214,7 @@ IMPLICIT NONE
 
 
 
-CALL synaptic(xi1,xi2,theta1,theta2,etaD,epoca,omega)
+CALL synaptic(xi1,xi2,theta1,theta2,C1,C2,etaD,epoca,omega)
 
 
 
