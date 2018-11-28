@@ -1,66 +1,66 @@
 MODULE algebra
 IMPLICIT NONE
   PUBLIC
-  INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
-  INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
-  INTEGER(KIND=SP):: n
-  REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:):: A, bt
-  REAL(KIND=DP):: c,nn, tau, etaO
+  INTEGER, PARAMETER::PS = SELECTED_INT_KIND(r=4)
+  INTEGER, PARAMETER::PD = SELECTED_REAL_KIND(8,10)
+  INTEGER(KIND=PS):: n
+  REAL(KIND=PD), ALLOCATABLE, DIMENSION(:,:):: A, bt
+  REAL(KIND=PD):: c,nn, tau, etaO
   
 CONTAINS
 
-REAL(KIND=DP) FUNCTION Robbins(c,nn)
+REAL(KIND=PD) FUNCTION Robbins(c,nn)
 !Taxa de aprendizagem calculada por Robbins and Monro(1951).
 !c é uma constante e nn é o número de iterações.
  IMPLICIT NONE
- INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10) 
- REAL(KIND=DP), INTENT(IN):: c,nn
+  INTEGER, PARAMETER::PS = SELECTED_INT_KIND(r=4)
+  INTEGER, PARAMETER::PD = SELECTED_REAL_KIND(8,10) 
+  INTEGER(KIND=PS), INTENT(IN):: nn
+  REAL(KIND=PD), INTENT(IN):: c
+  REAL(KIND=PD):: nnn
+ 
+  nnn = DFLOAT(nn) ! converte o inteiro em um real de dupla precisão
 
- Robbins=c/nn
+  Robbins=c/nnn
 
 END FUNCTION Robbins
 
-REAL(KIND=DP) FUNCTION Darken(etaO,nn,tau)
+REAL(KIND=PD) FUNCTION Darken(etaO,nn,tau)
 !Taxa de aprendizagem calculada por Darken and Moody(1992)
 !Evita que o eta dispare para valores altos de c e n.
 !Onde eta0 e tau são constantes definidas pelo usuário.
 !c = tau.etaO
  IMPLICIT NONE
- INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10) 
- REAL(KIND=DP), INTENT(IN):: etaO,nn,tau
+  INTEGER, PARAMETER::PD = SELECTED_REAL_KIND(8,10) 
+  INTEGER, PARAMETER::PS = SELECTED_INT_KIND(r=4)
+  INTEGER(KIND=PS), INTENT(IN):: nn
+  REAL(KIND=PD), INTENT(IN):: etaO,tau
+  REAL(KIND=PD):: nnn
+ 
+  nnn = DFLOAT(nn)
 
- Darken=etaO/(1+(nn/tau))
+
+ Darken=etaO/(1+(nnn/tau))
 
 END FUNCTION Darken
 
- SUBROUTINE transpostaM(n,A)
+ SUBROUTINE transposta(n,m,A)
+  !Nesta subrotina é preciso fornecer o número de linhas totais n.
+  !E o número de colunas totais m.
+
   IMPLICIT NONE
-  INTEGER(KIND=SP), INTENT(IN):: n  !n, dimensão da matriz
-  INTEGER(KIND=SP):: i, j
-  REAL(KIND=DP), DIMENSION(n,n), INTENT(INOUT):: A !A é a matriz de entrada. Ela vai ser reescrita no processo
+  INTEGER(KIND=PS), INTENT(IN):: n,m  !n, linhas e m, colunas
+  INTEGER(KIND=PS):: i, j
+  REAL(KIND=PD), DIMENSION(n,m), INTENT(INOUT):: A !A é a matriz de entrada. Ela vai ser reescrita no processo
 
 
     DO i=1,n
-      DO j=1,n
+      DO j=1,m
         A(j,i) = A(i,j)
-      ENDDO
-    ENDDO
+      END DO
+    END DO
 
-END SUBROUTINE transpostaM
+END SUBROUTINE transposta
 
-SUBROUTINE transpostaV(n,A)
-IMPLICIT NONE
-INTEGER(KIND=SP), INTENT(IN):: n  !n, dimensão da matriz
-INTEGER(KIND=SP):: i
-REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE, INTENT(INOUT):: A !A é a matriz de entrada. Ela vai ser reescrita no processo
-!REAL(KIND=DP), DIMENSION(:,:), ALLOCATABLE:: A
-
-!ALLOCATE(A(1,n))!,At(n,1))
-
-  DO i=1,n
-      A(:,i) = A(i,:)
-  ENDDO
-
-END SUBROUTINE transpostaV
 
 END MODULE algebra
