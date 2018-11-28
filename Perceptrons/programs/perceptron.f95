@@ -24,15 +24,12 @@ USE algebra
 IMPLICIT NONE 
   INTEGER, PARAMETER::SSP = SELECTED_INT_KIND(r=4)
   INTEGER, PARAMETER::DDP = SELECTED_REAL_KIND(8,10)
-  INTEGER(KIND=SSP):: i, j
   INTEGER(KIND=SSP)::epoca
-  REAL(KIND=DDP):: etaR, etaD
-  REAL(KIND=DDP):: theta1, theta2, C1, C2, vi, vf, dltv
-  REAL(KIND=DDP),PARAMETER::cc=1.0,nnn=2.0, eetaO=1.0, taau=3.0
-  !REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:):: omega
-  REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi1, xi2, csi, omega, omegaT
+  REAL(KIND=DDP):: etaR, etaD, vi, vf, dltv
+  REAL(KIND=DDP),PARAMETER::cc=1.0, eetaO=1.0, taau=3.0
+  REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi1, xi2, csi, omega
 
-  ALLOCATE(xi1(8,4),xi2(8,4),csi(8,4),omega(8,1),omegaT(1,8))
+  ALLOCATE(xi1(8,4),xi2(8,4),csi(12,4),omega(8,1))
 
   OPEN(1,FILE='outputs/saida.txt')
    
@@ -41,13 +38,9 @@ IMPLICIT NONE
   
   !Zera variáveis
   omega=0.0d00 !Peso sináptico
-  omegaT=0.0d0 !Peso sináptico
   xi1=0.0d00   !Treinamento de um único tipo litológico (subclasse1)
   xi2=0.0d00   !Treinamento de multi-padrões litológicos (subclasse2)
   epoca=0  !Número de ciclos de treinamento
-  theta1=0.0d0
-  theta1=0.0d0
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ENTRADA DA REDE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FASE DE TREINAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -55,13 +48,10 @@ IMPLICIT NONE
 
 
  !Vetor pesos:
-   
-   DO i=1,8
-    DO j=1,1
-    omega(i,j)=1.0d00
-   END DO 
-  END DO 
 
+  CALL pesos(8,1,1.0d00,omega)
+
+ 
 !Sinal de entrada para treinamento classe 1 (Folhelho)
   
   !Amazonas (Colunas:densidade,gama,resistividade,velocidade)
@@ -155,7 +145,11 @@ IMPLICIT NONE
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TREINAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!************************************************!
+!******* Definindo conjunto de treinamento ******!
+!************************************************!
 
   WRITE(*,*)'Entrada do treinamento subclasse 1 (Folhelho):'
   WRITE(*,FMT=13)xi1
@@ -164,46 +158,17 @@ IMPLICIT NONE
   WRITE(*,*)'Entrada do treinamento subclasse 2 (Multi-rochas):'
   WRITE(*,FMT=13)xi2 
    
-  WRITE(*,*)'Vetor de pesos:'
-  WRITE(*,FMT=14)omega
-  
-  omegaT=transpose(omega)
-  
-  WRITE(*,*)'Vetor de pesos tranposto:'
-  WRITE(*,FMT=11)omegaT
-
-  DO j=1,4
-   DO i=1,8
-     theta1 = theta1 + omegaT(1,i)*xi1(i,j)
-     theta2 = theta2 + omegaT(1,i)*xi2(i,j) 
-   END DO 
-  END DO 
-  
-  WRITE(*,*)'Domínio da função sinal subclasse 1'
-  WRITE(*,FMT=11)theta1
-
-  WRITE(*,*)'Domínio da função sinal subclasse 2'
-  WRITE(*,FMT=11)theta2
-
-  C1 = bin(theta1) !Define subclasse 1
-  C2 = bin(theta2) !Define subclasse 2 
-  
-  WRITE(*,*)'Subclasse 1'
-  WRITE(*,FMT=*)C1
-
-  WRITE(*,*)'Subclasse 2'
-  WRITE(*,FMT=*)C2
 
   ! Taxa de aprendizado por aproximação estocástica (Robbins,1958)
   
-  etaR = Robbins(cc,nnn)
+  etaR = Robbins(cc,epoca)
 
   WRITE(*,*)'Taxa de aprendizado de Robbin'
   WRITE(*,FMT=12)etaR
 
  ! Taxa de aprendizado por procura e convergência de Darken(1992)
   
-  etaD = Darken(eetaO,nnn,taau)
+  etaD = Darken(eetaO,epoca,taau)
 
   WRITE(*,*)'Taxa de aprendizado de Darken'
   WRITE(*,FMT=12)etaD
@@ -214,7 +179,7 @@ IMPLICIT NONE
 
 
 
-CALL synaptic(xi1,xi2,theta1,theta2,C1,C2,etaD,epoca,omega)
+CALL synaptic(xi1,xi2,etaD,epoca,omega)
 
 
 
@@ -233,26 +198,69 @@ CALL synaptic(xi1,xi2,theta1,theta2,C1,C2,etaD,epoca,omega)
 csi=0.0d00
 
 
+!                                  _
+  csi(1,1)=2.47d00  !densidade      | 
+  csi(1,2)=1.02d02  !gama           |===> primeira linha da matriz csi (folhelho)
+  csi(1,3)=9.93d03  !resistividade  | 
+  csi(1,4)=3.19d00  !velocidade    _|
+  csi(2,1)=2.53d00  !densidade      | 
+  csi(2,2)=9.35d01  !gama           |===> segunda linha da matriz csi (follhelho)
+  csi(2,3)=9.84d03  !resistividade  | 
+  csi(2,4)=2.87d00  !velocidade    _|
+  csi(3,1)=2.56d00  !densidade      | 
+  csi(3,2)=1.09d02  !gama           |===> terceira linha da matriz csi (folhelho)
+  csi(3,3)=9.28d03  !resistividade  | 
+  csi(3,4)=3.21d00  !velocidade    _|
+  csi(4,1)=2.98d00  !densidade      | 
+  csi(4,2)=3.00d01  !gama           |===> quarta linha da matriz csi (diabásio)
+  csi(4,3)=1.54d08  !resistividade  | 
+  csi(4,4)=5.51d00  !velocidade    _|
+  csi(5,1)=2.93d00  !densidade      | 
+  csi(5,2)=2.80d01  !gama           |===> quinta linha da matriz csi (diabásio)
+  csi(5,3)=1.56d08  !resistividade  | 
+  csi(5,4)=5.20d00  !velocidade    _|
+  csi(6,1)=2.70d00  !densidade      | 
+  csi(6,2)=8.16d00  !gama           |===> sexta linha da matriz csi (dolomita)
+  csi(6,3)=3.54d03  !resistividade  | 
+  csi(6,4)=6.39d00  !velocidade    _|
+  csi(7,1)=2.66d00  !densidade      | 
+  csi(7,2)=2.42d01  !gama           |===> sétima linha da matriz csi (conglomerado)
+  csi(7,3)=1.06d06  !resistividade  | 
+  csi(7,4)=4.14d00  !velocidade    _|
+  csi(8,1)=2.66d00  !densidade      | 
+  csi(8,2)=2.42d01  !gama           |===> oitava linha da matriz csi (cong+emb1)
+  csi(8,3)=1.06d06  !resistividade  | 
+  csi(8,4)=4.14d00  !velocidade    _|
+  csi(9,1)=2.66d00  !densidade      | 
+  csi(9,2)=2.42d01  !gama           |===> nona linha da matriz csi (cong+emb2)
+  csi(9,3)=1.06d06  !resistividade  | 
+  csi(9,4)=4.14d00  !velocidade    _|
+  csi(10,1)=2.66d00  !densidade     | 
+  csi(10,2)=2.42d01  !gama          |===> décima linha da matriz csi (cong+emb3)
+  csi(10,3)=1.06d06  !resistividade | 
+  csi(10,4)=4.14d00  !velocidade   _|
+  csi(11,1)=2.66d00  !densidade     | 
+  csi(11,2)=2.42d01  !gama          |===> décima primeira linha da matriz csi (cong+emb4)
+  csi(11,3)=1.06d06  !resistividade | 
+  csi(11,4)=4.14d00  !velocidade   _|
+  csi(12,1)=2.66d00  !densidade     | 
+  csi(12,2)=2.42d01  !gama          |===> décima segunda linha da matriz csi (embasamento)
+  csi(12,3)=1.06d06  !resistividade | 
+  csi(12,4)=4.14d00  !velocidade   _|
+
+
+
+
+
+
+
 WRITE(*,*)'Sinal de classificação'
 WRITE(*,FMT=13)csi
 
- !omegaT=transpose(omega)
 
- !DO i=1,8
- !  theta = theta + dot_product(omegaT(i,:),csi(:,i))
- !END DO
 
-  !DO i=1,8
-  !  theta = theta + p(i)*csi(1,i)
-  !END DO 
-    
 
-!Classificação Binária
 
-!Fativ=bin(theta)
-
-!WRITE(*,*)'Classificação da rede'
-!WRITE(*,FMT=*)Fativ  
 
 CALL cpu_time(vf)
 
@@ -265,7 +273,7 @@ CALL cpu_time(vf)
 !!!!!!!!!!!!!!!!!!!!!!!! FORMATO DOS ARQUIVOS DE SAÍDA !!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-11 FORMAT(8(ES12.2,1x))
+!11 FORMAT(8(ES12.2,1x))
 12 FORMAT(F12.2)
 13 FORMAT(4(ES12.2,1x))
 14 FORMAT(ES12.2)
