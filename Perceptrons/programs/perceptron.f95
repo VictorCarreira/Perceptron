@@ -31,7 +31,7 @@ IMPLICIT NONE
   CHARACTER(LEN=30):: evaluation
 
 
-  ALLOCATE(xi1(8,4),xi2(8,4),csi(12,4),omega(8,1))
+  ALLOCATE(xi1(8,4),xi2(8,4),csi(12,4),omega(4,1))
 
   OPEN(1,FILE='outputs/saida.txt')
    
@@ -43,6 +43,8 @@ IMPLICIT NONE
   xi1=0.0d00   !Treinamento de um único tipo litológico (subclasse1)
   xi2=0.0d00   !Treinamento de multi-padrões litológicos (subclasse2)
   epoca=0  !Número de ciclos de treinamento
+
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ENTRADA DA REDE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! FASE DE TREINAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -51,7 +53,7 @@ IMPLICIT NONE
 
  !Vetor pesos:
 
-  CALL pesos(8,1,1.0d00,omega)
+  CALL pesos(4,1,1.0d00,omega)
 
  
 !Sinal de entrada para treinamento classe 1 (Folhelho)
@@ -143,7 +145,7 @@ IMPLICIT NONE
  
 
 !Número de épocas
-  epoca = 250
+  epoca = 10000
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TREINAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -174,6 +176,10 @@ IMPLICIT NONE
 
   WRITE(*,*)'Taxa de aprendizado de Darken'
   WRITE(*,FMT=12)etaD
+  
+  WRITE(*,*)'Vetor W'
+  WRITE(*,FMT=14)omega
+
 
 !************************************************!
 !************ Atualização Sináptica *************!
@@ -225,30 +231,30 @@ csi=0.0d00
   csi(6,2)=8.16d00  !gama           |===> sexta linha da matriz csi (dolomita)
   csi(6,3)=3.54d03  !resistividade  | 
   csi(6,4)=6.39d00  !velocidade    _|
-  csi(7,1)=2.66d00  !densidade      | 
-  csi(7,2)=2.42d01  !gama           |===> sétima linha da matriz csi (conglomerado)
-  csi(7,3)=1.06d06  !resistividade  | 
-  csi(7,4)=4.14d00  !velocidade    _|
-  csi(8,1)=2.66d00  !densidade      | 
-  csi(8,2)=2.42d01  !gama           |===> oitava linha da matriz csi (cong+emb1)
-  csi(8,3)=1.06d06  !resistividade  | 
-  csi(8,4)=4.14d00  !velocidade    _|
-  csi(9,1)=2.66d00  !densidade      | 
-  csi(9,2)=2.42d01  !gama           |===> nona linha da matriz csi (cong+emb2)
-  csi(9,3)=1.06d06  !resistividade  | 
-  csi(9,4)=4.14d00  !velocidade    _|
-  csi(10,1)=2.66d00  !densidade     | 
-  csi(10,2)=2.42d01  !gama          |===> décima linha da matriz csi (cong+emb3)
-  csi(10,3)=1.06d06  !resistividade | 
-  csi(10,4)=4.14d00  !velocidade   _|
-  csi(11,1)=2.66d00  !densidade     | 
-  csi(11,2)=2.42d01  !gama          |===> décima primeira linha da matriz csi (cong+emb4)
-  csi(11,3)=1.06d06  !resistividade | 
-  csi(11,4)=4.14d00  !velocidade   _|
-  csi(12,1)=2.66d00  !densidade     | 
-  csi(12,2)=2.42d01  !gama          |===> décima segunda linha da matriz csi (embasamento)
-  csi(12,3)=1.06d06  !resistividade | 
-  csi(12,4)=4.14d00  !velocidade   _|
+  csi(7,1)=2.23d00  !densidade      | 
+  csi(7,2)=8.79d01  !gama           |===> sétima linha da matriz csi (conglomerado)
+  csi(7,3)=5.92d03  !resistividade  | 
+  csi(7,4)=1.97d00  !velocidade    _|
+  csi(8,1)=2.32d00  !densidade      | 
+  csi(8,2)=9.48d01  !gama           |===> oitava linha da matriz csi (cong+emb1)
+  csi(8,3)=3.62d04  !resistividade  | 
+  csi(8,4)=2.06d00  !velocidade    _|
+  csi(9,1)=2.42d00  !densidade      | 
+  csi(9,2)=6.44d01  !gama           |===> nona linha da matriz csi (cong+emb2)
+  csi(9,3)=4.36d05  !resistividade  | 
+  csi(9,4)=2.86d00  !velocidade    _|
+  csi(10,1)=2.60d00  !densidade     | 
+  csi(10,2)=3.97d01  !gama          |===> décima linha da matriz csi (cong+emb3)
+  csi(10,3)=7.42d05  !resistividade | 
+  csi(10,4)=3.71d00  !velocidade   _|
+  csi(11,1)=2.74d00  !densidade     | 
+  csi(11,2)=1.19d01  !gama          |===> décima primeira linha da matriz csi (cong+emb4)
+  csi(11,3)=1.23d06  !resistividade | 
+  csi(11,4)=4.42d00  !velocidade   _|
+  csi(12,1)=2.81d00  !densidade     | 
+  csi(12,2)=7.30d-01  !gama          |===> décima segunda linha da matriz csi (embasamento)
+  csi(12,3)=1.32d06  !resistividade | 
+  csi(12,4)=5.49d00  !velocidade   _|
 
 
 
