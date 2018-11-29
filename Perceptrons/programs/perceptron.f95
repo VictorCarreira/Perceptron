@@ -24,10 +24,12 @@ USE algebra
 IMPLICIT NONE 
   INTEGER, PARAMETER::SSP = SELECTED_INT_KIND(r=4)
   INTEGER, PARAMETER::DDP = SELECTED_REAL_KIND(8,10)
-  INTEGER(KIND=SSP)::epoca
+  INTEGER(KIND=SSP)::epoca, rock
   REAL(KIND=DDP):: etaR, etaD, vi, vf, dltv
   REAL(KIND=DDP),PARAMETER::cc=1.0, eetaO=1.0, taau=3.0
   REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi1, xi2, csi, omega
+  CHARACTER(LEN=30):: evaluation
+
 
   ALLOCATE(xi1(8,4),xi2(8,4),csi(12,4),omega(8,1))
 
@@ -187,10 +189,10 @@ CALL synaptic(xi1,xi2,etaD,epoca,omega)
   WRITE(*,FMT=14)omega
 
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fase de Classificação !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! vetor W atualizado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fase de Classificação !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! vetor W atualizado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 !Input (Conjunto de classificação)
@@ -259,7 +261,7 @@ WRITE(*,FMT=13)csi
 
 
 
-
+ CALL classification(csi,omega,rock,evaluation)
 
 
 CALL cpu_time(vf)
