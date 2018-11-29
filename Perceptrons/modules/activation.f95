@@ -41,8 +41,8 @@ REAL(KIND=DP), DIMENSION(m,n), INTENT(INOUT):: peso
 INTEGER(KIND=SP):: i,j 
 
 
-  DO i=1,m
-   DO j=1,n
+  DO i=1,m ! Linhas. No percetron é sempre 1. 
+   DO j=1,n! número de propriedades 
      peso(i,j)=x
    END DO 
   END DO 
@@ -59,7 +59,7 @@ INTEGER(KIND=SP), INTENT(IN):: epoch
 REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN):: xxi1,xxi2
 REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(INOUT):: w
 REAL(KIND=DP), INTENT(IN):: eta
-REAL(KIND=DP), DIMENSION(1,8):: wT
+!REAL(KIND=DP), DIMENSION(1,4):: wT
 INTEGER(KIND=SP):: i,j,k
 REAL(KIND=DP)::a1, a2, SC1, SC2
 
@@ -67,14 +67,14 @@ a1=0.0
 a2=0.0
 SC1=0.0
 SC2=0.0
-wT=0.0
+!wT=0.0
 
-wT=transpose(w)
+!wT=transpose(w)
 
-DO j=1,4
- DO i=1,8
-  a1 = a1 + wT(1,i)*xxi1(i,j)
-  a2 = a2 + wT(1,i)*xxi2(i,j)
+DO i=1,8
+ DO j=1,4
+  a1 = a1 + w(j,1)*xxi1(i,j)
+  a2 = a2 + w(j,1)*xxi2(i,j)
  END DO 
 END DO 
 
@@ -88,15 +88,15 @@ DO k=1,epoch !épocas
   DO j=1,4 ! número de propriedades da matriz de entrada 
 
     IF(a1 < 0d0 .or. SC1 >= 0d0)THEN 
-     w(i,1)=w(i,1)+eta*xxi1(i,j) 
+     w(j,1)=w(j,1)+eta*xxi1(i,j) 
     ELSE
-     w(i,1)=w(i,1)  
+     w(j,1)=w(j,1)  
     END IF
 
     IF(a2 >= 0d0 .or. SC2 < 0d0)THEN
-     w(i,1)=w(i,1)-eta*xxi2(i,j) 
+     w(j,1)=w(j,1)-eta*xxi2(i,j) 
     ELSE
-     w(i,1)=w(i,1)  
+     w(j,1)=w(j,1)  
     END IF
 
   END DO 
@@ -116,29 +116,29 @@ REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN)::dado
 REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN) :: w
 CHARACTER(LEN=30),INTENT(OUT)::aval
 INTEGER(KIND=SP), INTENT(OUT):: i
-REAL(KIND=DP), DIMENSION(1,8):: wT
+!REAL(KIND=DP), DIMENSION(1,4):: wT
 INTEGER(KIND=SP):: j
 REAL(KIND=DP)::a, c
 
- wT= 0.0d00
- wT = transpose(w)
+ a=0.0d00
+ !wT= 0.0d00
+ !wT = transpose(w)
 
-
- DO i=1,8
+ DO i=1,12
    DO j=1,4
-     a=a+wT(1,i)*dado(i,j)
+     a=a+w(j,1)*dado(i,j)
    END DO
 
   c=degrau(a)
 
 
-  IF(a>=0d0)THEN
-    aval= 'Pertence a subclasse'
+  IF(c > 0d0)THEN
+    aval= 'pertence a subclasse'
    ELSE
-    aval= 'Não pertence a subclasse'
+    aval= 'não pertence a subclasse'
   END IF
 
-  WRITE(*,*)i, 'Avaliação', '', aval
+  WRITE(*,*)i, 'Avaliação: ', ' ', aval
 
  END DO
 
