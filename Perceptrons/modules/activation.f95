@@ -106,15 +106,41 @@ END DO
 END SUBROUTINE synaptic
 
 
-SUBROUTINE classification(csi,omega)
+SUBROUTINE classification(dado,w,i,aval)
 !Faz uso matriz omega ajustada em associação com o sinal 
 !de entradada na fase de classificação
 IMPLICIT NONE
 INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
 INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
-REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:)::csi, omega
+REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN)::dado
+REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN) :: w
+CHARACTER(LEN=30),INTENT(OUT)::aval
+INTEGER(KIND=SP), INTENT(OUT):: i
+REAL(KIND=DP), DIMENSION(1,8):: wT
+INTEGER(KIND=SP):: j
+REAL(KIND=DP)::a, c
+
+ wT= 0.0d00
+ wT = transpose(w)
 
 
+ DO i=1,8
+   DO j=1,4
+     a=a+wT(1,i)*dado(i,j)
+   END DO
+
+  c=degrau(a)
+
+
+  IF(a>=0d0)THEN
+    aval= 'Pertence a subclasse'
+   ELSE
+    aval= 'Não pertence a subclasse'
+  END IF
+
+  WRITE(*,*)i, 'Avaliação', '', aval
+
+ END DO
 
 END SUBROUTINE classification 
 
