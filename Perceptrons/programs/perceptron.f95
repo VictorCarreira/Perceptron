@@ -24,7 +24,8 @@ USE algebra
 IMPLICIT NONE 
   INTEGER, PARAMETER::SSP = SELECTED_INT_KIND(r=4)
   INTEGER, PARAMETER::DDP = SELECTED_REAL_KIND(8,10)
-  INTEGER(KIND=SSP)::epoca, rock
+  INTEGER(KIND=DDP)::epoca 
+  INTEGER(KIND=SSP)::rock
   REAL(KIND=DDP):: etaR, etaD, vi, vf, dltv
   REAL(KIND=DDP),PARAMETER::cc=1.0, eetaO=1.0, taau=3.0
   REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi1, xi2, csi, omega
@@ -145,7 +146,7 @@ IMPLICIT NONE
  
 
 !Número de épocas
-  epoca = 10000
+  epoca = 1654600
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TREINAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -266,7 +267,7 @@ WRITE(*,*)'Sinal de classificação'
 WRITE(*,FMT=13)csi
 
 
-
+WRITE(*,*)'=============================================='
  CALL classification(csi,omega,rock,evaluation)
 
 
@@ -274,7 +275,7 @@ CALL cpu_time(vf)
 
   dltv = vf - vi
 
-  PRINT*,'------------------------'
+  PRINT*,'-----------------------------------------------'
   PRINT*,'tempo de máquina=',dltv,'segundos'
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
