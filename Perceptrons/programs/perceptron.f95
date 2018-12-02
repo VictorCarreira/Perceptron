@@ -27,7 +27,7 @@ IMPLICIT NONE
   INTEGER(KIND=DDP)::epoca 
   INTEGER(KIND=SSP)::rock
   REAL(KIND=DDP):: etaR, etaD, vi, vf, dltv
-  REAL(KIND=DDP),PARAMETER::cc=1.0, eetaO=1.0, taau=3.0
+  REAL(KIND=DDP),PARAMETER::cc=20000.0, eetaO=2000.0, taau=30.0
   REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi1, xi2, csi, omega
   CHARACTER(LEN=30):: evaluation
 
@@ -146,7 +146,7 @@ IMPLICIT NONE
  
 
 !Número de épocas
-  epoca = 1654600
+  epoca = 34600
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TREINAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -188,7 +188,7 @@ IMPLICIT NONE
 
 
 
-CALL synaptic(xi1,xi2,etaD,epoca,omega)
+CALL synaptic(xi1,xi2,etaR,epoca,omega)
 
 
 
@@ -283,7 +283,7 @@ CALL cpu_time(vf)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !11 FORMAT(8(ES12.2,1x))
-12 FORMAT(F12.2)
+12 FORMAT(F16.12)
 13 FORMAT(4(ES12.2,1x))
 14 FORMAT(ES12.2)
 
