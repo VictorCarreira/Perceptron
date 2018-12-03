@@ -27,7 +27,7 @@ IMPLICIT NONE
   INTEGER(KIND=DDP)::epoca 
   INTEGER(KIND=SSP)::rock
   REAL(KIND=DDP):: etaR, etaD, vi, vf, dltv
-  REAL(KIND=DDP),PARAMETER::cc=0.1d0, eetaO=2000.d0, taau=30.d0
+  REAL(KIND=DDP),PARAMETER::cc=0.1d0, eetaO=20.d0, taau=30.d0
   REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi1, xi2, csi, omega
   CHARACTER(LEN=30):: evaluation
 
@@ -43,7 +43,7 @@ IMPLICIT NONE
   omega=0.0d00 !Peso sináptico
   xi1=0.0d00   !Treinamento de um único tipo litológico (subclasse1)
   xi2=0.0d00   !Treinamento de multi-padrões litológicos (subclasse2)
-  epoca=0  !Número de ciclos de treinamento
+  !epoca=0  !Número de ciclos de treinamento
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -146,7 +146,7 @@ IMPLICIT NONE
  
 
 !Número de épocas
-  epoca = 2009
+  epoca = 2009 !numero ótimo para o folhelho
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TREINAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -188,7 +188,8 @@ IMPLICIT NONE
 
 
 
-CALL synaptic(xi1,xi2,1.0d-2,epoca,omega)
+!CALL synaptic(xi1,xi2,1.0d-2,epoca,omega) ! Sem critério de parada. Precisa fornecer as épocas.
+CALL synaptic(xi1,xi2,etaD,omega) !Com critério de parada. Calcula o número de épocas.
 
 
 
