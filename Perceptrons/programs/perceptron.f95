@@ -27,7 +27,7 @@ IMPLICIT NONE
   INTEGER(KIND=DDP)::epoca 
   INTEGER(KIND=SSP)::rock
   REAL(KIND=DDP):: etaR, etaD, vi, vf, dltv
-  REAL(KIND=DDP),PARAMETER::cc=20000.0, eetaO=2000.0, taau=30.0
+  REAL(KIND=DDP),PARAMETER::cc=0.1d0, eetaO=2000.d0, taau=30.d0
   REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi1, xi2, csi, omega
   CHARACTER(LEN=30):: evaluation
 
@@ -146,7 +146,7 @@ IMPLICIT NONE
  
 
 !Número de épocas
-  epoca = 34600
+  epoca = 2009
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TREINAMENTO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -188,13 +188,14 @@ IMPLICIT NONE
 
 
 
-CALL synaptic(xi1,xi2,etaR,epoca,omega)
+CALL synaptic(xi1,xi2,1.0d-2,epoca,omega)
+
 
 
 
   WRITE(*,*)'Vetor W atualizado'
   WRITE(*,FMT=14)omega
-
+    
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Fase de Classificação !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
