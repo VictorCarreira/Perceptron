@@ -51,25 +51,23 @@ END SUBROUTINE pesos
 
 !-------------------------------------------------------
 
-SUBROUTINE synaptic(xxi1,xxi2,eta,epoch,w)
+!SUBROUTINE synaptic(xxi1,xxi2,eta,epoch,w) !sem critério de parada
+SUBROUTINE synaptic(xxi1,xxi2,eta,w) !com ritério de parada
 IMPLICIT NONE
 INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
 INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
-INTEGER(KIND=DP), INTENT(IN):: epoch
+INTEGER(KIND=DP):: epoch
 REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN):: xxi1,xxi2
 REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(INOUT):: w
 REAL(KIND=DP), INTENT(IN):: eta
-!REAL(KIND=DP), DIMENSION(1,4):: wT
-INTEGER(KIND=SP):: i,j,k
+INTEGER(KIND=SP):: i,j!,k
 REAL(KIND=DP)::a1, a2, SC1, SC2
 
 a1=0.0d0
 a2=0.0d0
 SC1=0.0d0
 SC2=0.0d0
-!wT=0.0
-
-!wT=transpose(w)
+epoch=0
 
 DO i=1,8
  DO j=1,4 !chute inicial
@@ -78,8 +76,11 @@ DO i=1,8
  END DO 
 END DO 
 
+!DO k=1,epoch !épocas
 
-DO k=1,epoch !épocas
+DO WHILE (a1 < 0d0 .or. a2 > 0d0)
+
+epoch=epoch+1 ! Conta quantas épocas são necessárias para finalizar o treinamento (automatização)
 
 DO i=1,8
 
@@ -116,11 +117,13 @@ a2=0d0
 
 END DO !laço das amostras
 
-print*,'------------------'
-print*,'a1=',a1
-print*,'a2=',a2
+!print*,'------------------'
+!print*,'a1=',a1
+!print*,'a2=',a2
 
 END DO !Final do laço do treinamento 
+
+print*,'número de épocas=',epoch
 
 END SUBROUTINE synaptic
 
