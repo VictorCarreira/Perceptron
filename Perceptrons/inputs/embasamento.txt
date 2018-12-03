@@ -1,0 +1,20 @@
+Litologia     codigo      prof  dens       gama       rho        vel
+    				x1	   x2         x3          x4
+embasamento     5         670   2.76E+00   7.05E-01   1.33E+06   4.63E+00
+embasamento     5         671   2.79E+00   6.96E-01   1.21E+06   5.12E+00
+embasamento     5         672   2.84E+00   7.08E-01   1.26E+06   5.03E+00
+embasamento     5         673   2.82E+00   6.77E-01   1.39E+06   5.14E+00
+embasamento     5         674   2.82E+00   7.31E-01   1.27E+06   5.16E+00
+embasamento     5         675   2.79E+00   6.89E-01   1.29E+06   5.00E+00
+embasamento     5         676   2.77E+00   7.57E-01   1.21E+06   4.39E+00
+embasamento     5         677   2.85E+00   7.17E-01   1.24E+06   4.70E+00
+
+                                x1        x2        x3           x4
+folhelho        1           6   2.51E+00   9.94E+01   9.94E+03   2.83E+00
+dolomita        2          51   2.70E+00   8.16E+00   3.54E+03   6.39E+00
+diabasio        3         101   2.92E+00   3.07E+01   1.58E+08   5.56E+00
+conglomerado    4         220   2.30E+00   9.45E+01   5.85E+03   1.99E+00
+congl+emb1    451         420   2.26E+00   9.32E+01   1.26E+04   2.10E+00
+congl+emb2    452         472   2.47E+00   7.36E+01   3.00E+05   2.60E+00
+congl+emb3    453         539   2.63E+00   4.33E+01   7.75E+05   3.99E+00
+congl+emb4    454         598   2.75E+00   1.31E+01   1.13E+06   4.47E+00
