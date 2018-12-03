@@ -40,7 +40,7 @@ REAL(KIND=PD) FUNCTION Darken(etaO,nn,tau)
   nnn = DFLOAT(nn)
 
 
- Darken=etaO/(1+(nnn/tau))
+ Darken=etaO/(1.0d0+(nnn/tau))
 
 END FUNCTION Darken
 

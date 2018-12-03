@@ -16,10 +16,10 @@ REAL(KIND=DP) FUNCTION degrau(x)
 INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10) 
 REAL(KIND=DP), INTENT(IN):: x
 
-  IF(x >= 0.0 ) THEN
-   degrau = +1.0   
-  ELSE IF (x < 0.0) THEN
-   degrau = -1.0 
+  IF(x >= 0.0d0 ) THEN
+   degrau = +1.0d0   
+  ELSE IF (x < 0.0d0) THEN
+   degrau = -1.0d0 
   END IF
 
 END FUNCTION degrau
@@ -63,45 +63,64 @@ REAL(KIND=DP), INTENT(IN):: eta
 INTEGER(KIND=SP):: i,j,k
 REAL(KIND=DP)::a1, a2, SC1, SC2
 
-a1=0.0
-a2=0.0
-SC1=0.0
-SC2=0.0
+a1=0.0d0
+a2=0.0d0
+SC1=0.0d0
+SC2=0.0d0
 !wT=0.0
 
 !wT=transpose(w)
 
 DO i=1,8
- DO j=1,4
+ DO j=1,4 !chute inicial
   a1 = a1 + w(j,1)*xxi1(i,j)
   a2 = a2 + w(j,1)*xxi2(i,j)
  END DO 
 END DO 
 
 
+DO k=1,epoch !épocas
+
+DO i=1,8
+
+
 SC1= degrau(a1)
 SC2= degrau(a2)
 
 
-DO k=1,epoch !épocas
- DO i=1,8 !número de linhas da matriz de entrada
+
+ !DO i=1,8 !número de linhas da matriz de entrada
   DO j=1,4 ! número de propriedades da matriz de entrada 
 
-    IF(a1 < 0d0 .or. SC1 >= 0d0)THEN 
+    IF(SC1 < 0d0)THEN 
      w(j,1)=w(j,1)+eta*xxi1(i,j) 
     ELSE
      w(j,1)=w(j,1)  
     END IF
 
-    IF(a2 >= 0d0 .or. SC2 < 0d0)THEN
+    IF(SC2 > 0d0)THEN
      w(j,1)=w(j,1)-eta*xxi2(i,j) 
     ELSE
      w(j,1)=w(j,1)  
     END IF
 
   END DO 
- END DO
-END DO  
+
+a1=0d0
+a2=0d0
+
+ DO j=1,4 !atualização dos a's
+  a1 = a1 + w(j,1)*xxi1(i,j)
+  a2 = a2 + w(j,1)*xxi2(i,j)
+ END DO 
+
+END DO !laço das amostras
+
+print*,'------------------'
+print*,'a1=',a1
+print*,'a2=',a2
+
+END DO !Final do laço do treinamento 
 
 END SUBROUTINE synaptic
 
@@ -120,7 +139,7 @@ INTEGER(KIND=SP), INTENT(OUT):: i
 INTEGER(KIND=SP):: j
 REAL(KIND=DP)::a, c
 
- a=0.0d00
+ a=0.0d0
  !wT= 0.0d00
  !wT = transpose(w)
 
