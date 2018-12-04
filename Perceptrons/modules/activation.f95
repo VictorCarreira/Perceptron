@@ -25,6 +25,61 @@ REAL(KIND=DP), INTENT(IN):: x
 END FUNCTION degrau
 
 !-------------------------------------------------------
+SUBROUTINE entrada() 
+IMPLICIT NONE
+INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
+INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
+INTEGER(KIND=SP):: i
+REAL(KIND=DP), ALLOCATABLE, DIMENSION (:,:):: xi1, xi2
+REAL(KIND=DP)::a1, a2, a3, a4, icod, iprof
+CHARACTER(LEN=80):: cab
+CHARACTER(LEN=20):: linha(4)
+
+ALLOCATE(xi1(100,4),xi2(100,4))
+
+READ(1,FMT=15) cab 
+READ(1,FMT=15) cab 
+
+ DO i =1,8
+  READ(1,FMT=*) linha(1), icod, iprof, a1, a2, a3, a4
+    xi1(i,1)=a1
+    xi1(i,2)=a2
+    xi1(i,3)=a3
+    xi1(i,4)=a4
+  END DO 
+
+
+READ(1,FMT=15) cab 
+READ(1,FMT=15) cab 
+
+ DO i =1,8
+  READ(1,FMT=*) linha(2), icod, iprof, a1, a2, a3, a4
+    xi1(i,1)=a1
+    xi1(i,2)=a2
+    xi1(i,3)=a3
+    xi1(i,4)=a4
+ END DO 
+
+DO i=1,8
+  WRITE(6,FMT=16) xi1(i,1), xi1(i,2), xi1(i,3), xi1(i,4)
+END DO 
+  WRITE(6,FMT=*) '--------------------------------------'
+DO i=1,8
+  WRITE(6,FMT=16) xi2(i,1), xi2(i,2), xi2(i,3), xi2(i,4)
+END DO 
+
+
+!FORMATOS UTILIZADOS
+15 FORMAT(A71)
+16 FORMAT(4(ES9.2E2,2x))
+
+END SUBROUTINE entrada 
+
+
+
+
+
+!-------------------------------------------------------
 
 SUBROUTINE pesos(m,n,x,peso)
 !Define valor constante para a matriz de pesos, 
@@ -83,7 +138,6 @@ DO WHILE (a1 < 0d0 .or. a2 > 0d0)
 epoch=epoch+1 ! Conta quantas épocas são necessárias para finalizar o treinamento (automatização)
 
 DO i=1,8
-
 
 SC1= degrau(a1)
 SC2= degrau(a2)
