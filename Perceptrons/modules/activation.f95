@@ -25,17 +25,21 @@ REAL(KIND=DP), INTENT(IN):: x
 END FUNCTION degrau
 
 !-------------------------------------------------------
-SUBROUTINE entrada() 
+SUBROUTINE entrada(xi1, xi2, a1, a2, a3, a4) 
 IMPLICIT NONE
 INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
 INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
 INTEGER(KIND=SP):: i
-REAL(KIND=DP), ALLOCATABLE, DIMENSION (:,:):: xi1, xi2
-REAL(KIND=DP)::a1, a2, a3, a4, icod, iprof
+REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(INOUT):: xi1, xi2
+REAL(KIND=DP), INTENT(INOUT)::a1, a2, a3, a4
+REAL(KIND=DP):: icod, iprof
 CHARACTER(LEN=80):: cab
 CHARACTER(LEN=20):: linha(4)
 
-ALLOCATE(xi1(100,4),xi2(100,4))
+
+OPEN(UNIT=1, FILE='inputs/folhelho.txt')
+
+ALLOCATE(xi1(8,4),xi2(8,4))
 
 READ(1,FMT=15) cab 
 READ(1,FMT=15) cab 
