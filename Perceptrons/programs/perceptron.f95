@@ -27,12 +27,13 @@ IMPLICIT NONE
   INTEGER(KIND=DDP)::epoca 
   INTEGER(KIND=SSP)::rock
   REAL(KIND=DDP):: etaR, etaD, vi, vf, dltv
+  REAL(KIND=DDP):: aa1, aa2, aa3, aa4
   REAL(KIND=DDP),PARAMETER::cc=0.1d0, eetaO=20.d0, taau=30.d0
   REAL(KIND=DDP), ALLOCATABLE, DIMENSION(:,:):: xi1, xi2, csi, omega
   CHARACTER(LEN=30):: evaluation
 
 
-  ALLOCATE(xi1(8,4),xi2(8,4),csi(12,4),omega(4,1))
+  ALLOCATE(csi(12,4),omega(4,1))
 
   OPEN(1,FILE='inputs/folhelho.txt')
   OPEN(2,FILE='outputs/saida.txt')
@@ -53,7 +54,7 @@ IMPLICIT NONE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-  CALL entrada()
+  CALL entrada(xi1, xi2, aa1, aa2, aa3, aa4)
 
  !Vetor pesos:
 
