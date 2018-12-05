@@ -25,21 +25,29 @@ REAL(KIND=DP), INTENT(IN):: x
 END FUNCTION degrau
 
 !-------------------------------------------------------
-SUBROUTINE entrada(xi1, xi2, a1, a2, a3, a4) 
+SUBROUTINE entrada(xi1, xi2) 
+!Esta subrotina visa automatizar a entrada de dados do perceptron.
+!As duas primeiras informações a serem fornecidas são as matrizes
+!que armazenam as informações de propriedades físicas das rochas. 
+!Estas entram vazias e retornam preenchidas.
+
 IMPLICIT NONE
 INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
 INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
 INTEGER(KIND=SP):: i
 REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(INOUT):: xi1, xi2
-REAL(KIND=DP), INTENT(INOUT)::a1, a2, a3, a4
+REAL(KIND=DP)::a1, a2, a3, a4
 REAL(KIND=DP):: icod, iprof
 CHARACTER(LEN=80):: cab
 CHARACTER(LEN=20):: linha(4)
 
-
 OPEN(UNIT=1, FILE='inputs/folhelho.txt')
 
 ALLOCATE(xi1(8,4),xi2(8,4))
+
+!Zera variáveis
+xi1=0.0d0 !Treinamento de um único tipo litológico (subclasse1) 
+xi2=0.0d0 !Treinamento de multipadrões litológicos (subclasse2) 
 
 READ(1,FMT=15) cab 
 READ(1,FMT=15) cab 
@@ -58,10 +66,10 @@ READ(1,FMT=15) cab
 
  DO i =1,8
   READ(1,FMT=*) linha(2), icod, iprof, a1, a2, a3, a4
-    xi1(i,1)=a1
-    xi1(i,2)=a2
-    xi1(i,3)=a3
-    xi1(i,4)=a4
+    xi2(i,1)=a1
+    xi2(i,2)=a2
+    xi2(i,3)=a3
+    xi2(i,4)=a4
  END DO 
 
 DO i=1,8
