@@ -51,11 +51,11 @@ IMPLICIT NONE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-  CALL entrada(xi1, xi2)
+  CALL E-training(xi1, xi2)
 
  !Vetor pesos:
 
-  CALL pesos(4,1,1.0d00,omega)
+  CALL weight(4,1,1.0d00,omega)
 
 !Número de épocas
  ! epoca = 2009 !numero ótimo para o folhelho. Precisa fornecer quando não há critério de parada.
