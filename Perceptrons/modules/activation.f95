@@ -26,7 +26,7 @@ END FUNCTION degrau
 
 !-------------------------------------------------------------------------
 
-SUBROUTINE E-training(xi1, xi2) 
+SUBROUTINE Etraining(xi1, xi2) 
 !Esta subrotina visa automatizar a entrada de dados do perceptron.
 !As duas primeiras informações a serem fornecidas são as matrizes
 !que armazenam as informações de propriedades físicas das rochas. 
@@ -86,33 +86,69 @@ END DO
 15 FORMAT(A71)
 16 FORMAT(4(ES9.2E2,2x))
 
-END SUBROUTINE E-training 
+END SUBROUTINE Etraining 
 
 
 !-------------------------------------------------------
 
-SUBROUTINE E-classification
+SUBROUTINE Eclassification(csi,nd)
 IMPLICIT NONE 
 INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
 INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
-
-
+INTEGER(KIND=SP):: i, icod, iprof!,ilinha
+INTEGER(KIND=SP),INTENT(OUT):: nd
+CHARACTER(LEN=80):: cab, litologia
+REAL(KIND=DP)::a1, a2, a3, a4
+REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(INOUT)::csi
 
   OPEN(3,FILE='inputs/dados_sint_c1.txt')
 
  !Leitura do arquivo de dados a ser classificado
  
-  READ(1,15) !Cabeçalho
-   WRITE(6,15)
+  READ(3,FMT=15) cab !Cabeçalho
+   WRITE(6,FMT=15) cab
   
-  READ(1,15) !Espaço em branco em baixo do cabeçalho
-   WRITE(6,15)
+  READ(3,FMT=15) cab !Espaço em branco em baixo do cabeçalho
+   WRITE(6,FMT=15) cab
   
   i=1
-   DO WHILE (.TRUE.)
-      READ(1,*,END=10) 
+   DO WHILE (.TRUE.) ! Lê entrada até que existam linhas 
+      READ(3,*,END=10) litologia, icod, iprof, a1, a2, a3, a4
+       i=i+1
+       !csi(i,1)=a1
+       !csi(i,1)=a1
+       !csi(i,1)=a1
+       !csi(i,1)=a1
+   END DO
+10 CONTINUE 
+   !CLOSE(3)  
 
-END SUBROUTINE E-classification
+   nd=i-1 !linhas do arquivo de entrada e dimensão da matriz csi
+
+    WRITE(6,FMT=*)"Quantidade de dados a serem classificados=", nd
+
+  ALLOCATE(csi(nd,4)) !Dimensiona csi com a dimensão do dado 
+
+   !nd=ilinha
+
+ !DO i =1,nd  ! Armazena os dados de propriedades na matriz csi
+   !READ(3,FMT=*) litologia, icod, iprof, a1, a2, a3, a4
+    !csi(i,1)=a1
+    !csi(i,2)=a2
+    !csi(i,3)=a3
+    !csi(i,4)=a4
+ !END DO 
+
+DO i=1,nd
+  WRITE(6,FMT=16) csi(i,1), csi(i,2), csi(i,3), csi(i,4)
+END DO 
+ 
+!FORMATOS UTILIZADOS
+15 FORMAT(A71)
+16 FORMAT(4(ES9.2E2,2x))
+
+
+END SUBROUTINE Eclassification
 
 
 !-------------------------------------------------------
@@ -218,16 +254,17 @@ print*,'número de épocas=',epoch
 END SUBROUTINE synaptic
 
 
-SUBROUTINE classification(dado,w,i,aval)
+SUBROUTINE classification(dado,w,nd,i,aval)
 !Faz uso matriz omega ajustada em associação com o sinal 
 !de entradada na fase de classificação
 IMPLICIT NONE
-INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=4)
+INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
 INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
 REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN)::dado
 REAL(KIND=DP), ALLOCATABLE, DIMENSION(:,:), INTENT(IN) :: w
 CHARACTER(LEN=30),INTENT(OUT)::aval
 INTEGER(KIND=SP), INTENT(OUT):: i
+INTEGER(KIND=SP), INTENT(IN)::nd
 !REAL(KIND=DP), DIMENSION(1,4):: wT
 INTEGER(KIND=SP):: j
 REAL(KIND=DP)::a, c
@@ -236,7 +273,7 @@ REAL(KIND=DP)::a, c
  !wT= 0.0d00
  !wT = transpose(w)
 
- DO i=1,12
+ DO i=1,nd
    DO j=1,4
      a=a+w(j,1)*dado(i,j)
    END DO
