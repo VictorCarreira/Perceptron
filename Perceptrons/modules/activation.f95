@@ -24,8 +24,9 @@ REAL(KIND=DP), INTENT(IN):: x
 
 END FUNCTION degrau
 
-!-------------------------------------------------------
-SUBROUTINE entrada(xi1, xi2) 
+!-------------------------------------------------------------------------
+
+SUBROUTINE E-training(xi1, xi2) 
 !Esta subrotina visa automatizar a entrada de dados do perceptron.
 !As duas primeiras informações a serem fornecidas são as matrizes
 !que armazenam as informações de propriedades físicas das rochas. 
@@ -85,15 +86,38 @@ END DO
 15 FORMAT(A71)
 16 FORMAT(4(ES9.2E2,2x))
 
-END SUBROUTINE entrada 
-
-
-
+END SUBROUTINE E-training 
 
 
 !-------------------------------------------------------
 
-SUBROUTINE pesos(m,n,x,peso)
+SUBROUTINE E-classification
+IMPLICIT NONE 
+INTEGER, PARAMETER::SP = SELECTED_INT_KIND(r=8)
+INTEGER, PARAMETER::DP = SELECTED_REAL_KIND(8,10)
+
+
+
+  OPEN(3,FILE='inputs/dados_sint_c1.txt')
+
+ !Leitura do arquivo de dados a ser classificado
+ 
+  READ(1,15) !Cabeçalho
+   WRITE(6,15)
+  
+  READ(1,15) !Espaço em branco em baixo do cabeçalho
+   WRITE(6,15)
+  
+  i=1
+   DO WHILE (.TRUE.)
+      READ(1,*,END=10) 
+
+END SUBROUTINE E-classification
+
+
+!-------------------------------------------------------
+
+SUBROUTINE weight(m,n,x,peso)
 !Define valor constante para a matriz de pesos, 
 !bem como a sua dimensão do vetor de pesos. Caso
 !"n" seja 1 omega assumirá posição de vetor coluna.
@@ -114,7 +138,7 @@ INTEGER(KIND=SP):: i,j
    END DO 
   END DO 
 
-END SUBROUTINE pesos
+END SUBROUTINE weight
 
 !-------------------------------------------------------
 
